@@ -1,0 +1,45 @@
+<div id="foo"></div>
+<script>
+  var subviewClass = Backbone.View.extend({
+    events: {
+      'click .button': '_handleClick',
+    },
+
+    render: function() {
+      this.$el.html('<button class="button">Child</button>');
+
+      return this
+    },
+    _handleClick: function(e) {
+      console.error("=============>", 'child');
+    }
+  });
+
+  var viewClass = Backbone.View.extend({
+    events: {
+      'click .parent': '_handleClick',
+    },
+
+    initialize: function() {
+      this.sub = new subviewClass();
+    },
+
+    render: function() {
+      this.$el.html('<button class="parent">Hi</button>');
+
+      return this
+    },
+
+    _handleClick: function(e) {
+      console.error("=============>", e);
+      this.$el.append(this.sub.render().el)
+    }
+  });
+
+  var view = new viewClass({
+    collection: new Backbone.Collection(),
+    foo: 'bar',
+  });
+
+  $('#foo').html(view.render().el);
+</script>
